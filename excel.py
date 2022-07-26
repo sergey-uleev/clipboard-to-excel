@@ -4,12 +4,18 @@ import datetime  # Библиотека для работы с датой и в�
 import openpyxl
 
 def write(text):
-    book = openpyxl.Workbook()
+    book = openpyxl.load_workbook('my_book.xlsx')
     sheet = book.active
-    row = 1
-    sheet['B1'].value = text
+    row = search_empty(sheet)
+    sheet.cell(row = row, column = 2).value = text
     time = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    sheet.cell(row = 1, column = 3).value = time 
-    row += 1
+    sheet.cell(row = row, column = 3).value = time 
     book.save('my_book.xlsx')
     book.close()
+
+def search_empty(sheet):
+    empty = 1
+    while sheet.cell(row = empty, column = 2).value != None:
+        empty += 1
+    return empty
+
