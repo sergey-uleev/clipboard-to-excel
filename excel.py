@@ -1,6 +1,7 @@
 # Как записывать данные в Ехcel
 import datetime  # Библиотека для работы с датой и временем
 import openpyxl
+from utils import is_next_day
 
 class Excel:
     filename = ''
@@ -16,6 +17,13 @@ class Excel:
 
     def write(self, text):
         row = search_empty(self.sheet)
+        rec_num = 1
+        if row > 1:
+            last_date = datetime.datetime.strptime(self.__get(row - 1, 3), '%d-%m-%Y %H:%M:%S').date()
+            now = datetime.datetime.now()
+            if not is_next_day(last_date, now):
+                rec_num = self.__get(row - 1, 1) + 1
+        self.__write_cell(row, 1, rec_num)
         self.__write_cell(row, 2, text)
         time = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         self.__write_cell(row, 3, time)
@@ -27,6 +35,9 @@ class Excel:
     def __save_and_close(self):
         self.book.save(self.filename)
         self.book.close()
+    
+    def __get(self, row, col):
+        return self.sheet.cell(row = row, column = col).value
 
 def search_empty(sheet):
     empty = 1
