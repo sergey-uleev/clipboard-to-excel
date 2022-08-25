@@ -1,7 +1,7 @@
 import sys
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PyQt6.QtGui import QIcon, QAction
 from window import Window
-# from excel import Excel
 
 app = None
 win = None
@@ -17,7 +17,19 @@ def main(): # Объявляем главную функцию программ�
     global win
     global clipboard
 
-    app = QApplication(sys.argv) # Create an instance of QtWidgets.QApplication
+    app = QApplication(sys.argv)
+
+    app.setQuitOnLastWindowClosed(False)
+    icon = QIcon('filled_icon.ico')
+    tray = QSystemTrayIcon()
+    tray.setIcon(icon)
+    tray.setVisible(True)
+    menu = QMenu()
+    quit = QAction('Выйти')
+    quit.triggered.connect(app.quit)
+    menu.addAction(quit)
+    tray.setContextMenu(menu)
+
     clipboard = app.clipboard()
     clipboard.dataChanged.connect(on_copy)
     win = Window()
