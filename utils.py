@@ -1,3 +1,5 @@
+from openpyxl import Workbook
+
 def is_next_day(date_1, date_2):
     if date_1.year < date_2.year:
         return True
@@ -7,3 +9,7 @@ def is_next_day(date_1, date_2):
         return True
     else:
         return False
+
+def create_xlsx_file(filename):
+    wb = Workbook()
+    wb.save(filename)
