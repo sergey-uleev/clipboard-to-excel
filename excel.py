@@ -1,7 +1,8 @@
 # Как записывать данные в Ехcel
 import datetime  # Библиотека для работы с датой и временем
+import os
 import openpyxl
-from utils import is_next_day
+from utils import is_next_day, create_xlsx_file
 
 class Excel:
     filename = ''
@@ -12,10 +13,12 @@ class Excel:
         self.__open(self.filename)
 
     def __open(self, filename):
+        if not os.path.exists(self.filename):
+            create_xlsx_file(self.filename)
         self.book = openpyxl.load_workbook(filename)
         self.sheet = self.book.active
 
-    def write(self, text):
+    def write(self, text, comment=''):
         row = search_empty(self.sheet)
         rec_num = 1
         if row > 1:
@@ -27,6 +30,7 @@ class Excel:
         self.__write_cell(row, 2, text)
         time = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         self.__write_cell(row, 3, time)
+        self.__write_cell(row, 4, comment)
         self.__save_and_close()
 
     def __write_cell(self, row, col, text):
