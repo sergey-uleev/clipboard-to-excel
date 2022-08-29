@@ -2,6 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QIcon, QAction
 from window import Window
+from validation import validate
 
 app = None
 win = None
@@ -9,8 +10,9 @@ clipboard = None
 
 def on_copy():
     text = clipboard.text()
-    win.change_label_text(text)
-    win.open()
+    if validate(text):
+        win.change_label_text(text)
+        win.open()
 
 def main(): # Объявляем главную функцию программы
     global app
